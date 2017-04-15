@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>FrontEnd Jquery</title>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+
+  tr#total_pagar {
+      font-weight: bold;
+      font-size: xx-large;
+  }
+  footer.footer {
+
+    position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+
+}
+.text-muted {
+    color: black;
+    padding-top: 20px;
+    text-align: -webkit-center;
+}
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 60px;
+}
+
+.modal-content {
+    text-align: center;
+}
+  </style>
+
+
+</head>
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="jquery/jquery-3.2.1.min.js"></script>
+  <script src="jquery/jquery-3.2.1.js"></script>
+
+
+  <div class="container-fluid">
+    <div class="row">
+
+
+        <div class="container">
+          <div class="col-xs-12 col-md-4"><br><img src="img/logo.png"></br></div>
+          <div class="col-xs-12 col-md-4"></div>
+          <div class="col-xs-12 col-md-4"></div>
+
+      </div>
+
+
+
+
+        <div class="container">
+        <div class="col-xs-6 col-md-6">
+
+          <h4> Seleccione una opción:</h4>
+          <select class="form-control" id="productos">
+            <option value="2500">Seleccionar</option>
+            <option value="2500">Pizza</option>
+            <option value="950">Completo</option>
+            <option value="2750">Churrasco</option>
+          </select>
+          <br><button type="button" id="btnAgregarComida" class="btn btn-success btn-sm">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar
+          </button></br>
+
+          <h4> Seleccione Bebida</h4>
+          <select class="form-control" id="bebidas">
+            <option value="950">-------</option>
+
+          </select>
+          <br><button type="button" id="btnAgregarBebida" class="btn btn-success btn-sm ">
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Agregar
+          </button></br>
+        </div>
+
+        <div class="col-xs-6 col-md-6">
+          <div class="" id ="subtotal">
+            <table class='table table-condensed' id="datos">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+<!--- footer   -->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">FrontEnd | Bootstrap | Jquery | 2017 | cesborquez@gmail.com</p>
+      </div>
+    </footer>
+<!--- fin footer -->
+
+
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <br>
+      <p s>Muchas Gracias por su visita!!</p>
+    </br>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  <script>
+
+  <!-- Declaración de Arrays utilizados para guardar los elementos -->
+  var array_completo = [];
+  var array_churrasco =[];
+  var array_pizza =[];
+  var array_total =[];
+
+<!-- Declaración de funcion que realiza el cálculo de la venta realizada -->
+function calcular_venta() {
+  var subtotal_churrasco = $('#total_churrasco').html();
+  var subtotal_completo = $('#total_completo').html();
+  var subtotal_pizza = $('#total_pizza').html();
+  if (isNaN(subtotal_pizza) ){
+  subtotal_pizza =0;
+  }
+  if (isNaN(subtotal_churrasco) ){
+  subtotal_churrasco =0;
+  }
+  if (isNaN(subtotal_completo) ){
+  subtotal_completo =0;
+  }
+  var total_final = (parseInt(subtotal_pizza)+parseInt(subtotal_completo)+parseInt(subtotal_churrasco));
+  $('#total_final').text("$"+total_final);
+  if(total_final <=0){
+    $('table#datos tr#total_pagar').remove();
+    $('table#datos tr#desc_venta').remove();
+    $('table#datos tr#detalle_pedido').remove();
+    $('table#datos tr#btnCompra').remove();
+
+    array_total.pop(1);
+  }
+};
+
+<!-- Declaración de función encargada de crear el encabezado y tabla que administra los valores -->
+function crear_tabla(){
+  if(array_total.length<=0){
+      if(array_pizza.length>0 || array_churrasco.length>0 || array_completo.length>0){
+      $('#datos > tbody:last').after("<tr><br><td></td><td></td><td></td><td> <br></td><td></td><td></td></tr><tr id='total_pagar' ><td></td><td></td><td>Total:</td><td id='total_final'> </td><td></td><td></td></tr><tr id='btnCompra'><br><td></td><td></td><td></td><td> <br>  <button type='button' id='btnPagar' data-toggle='modal' data-target='.bs-example-modal-sm'class='btn btn-primary btn-lg'><spam class='glyphicon glyphicon-shopping-cart'aria-hidden='true'> Pagar </spam></button></td><td></td><td></td></tr>");
+      $('#datos > thead:first').after("<tr id='detalle_pedido'><td><h4> Detalle de Pedido</h4></td></tr><tr id='desc_venta'><td>Producto</td><td>Cantidad</td><td>Precio Unitario</td><td>Total</td><td></td><td></td></tr>");
+      calcular_venta();
+      array_total.push(1);
+    };
+  };
+};
+
+
+  $("#btnAgregarComida").click(function(){
+    var _valor = $('#productos').val();
+    var _productos = $("#productos option:selected").html();
+    var index_pizza = array_pizza.length;
+    var index_completo = array_completo.length;
+    var index_churrasco = array_churrasco.length;
+    var costo_pizza = $('#productos').val();
+    var costo_completo = $('#productos').val();
+    var costo_churrasco = $('#productos').val();
+    var subtotal_pizza = $('#total_pizza').html();
+    crear_tabla();
+
+
+
+    if (_productos=="Pizza"){
+      if (index_pizza <= 0){
+        array_pizza.push(_productos);
+        $('#datos').append("<tr id='contenedor_pizza'><td>"+_productos+"</td><td id='cont_pizza'></td><td id='valor_pizza'></td><td id='total_pizza' ></td><td><button type='button' id='autoClick' class='btn btn-success btn-xs glyphicon glyphicon-plus'></button><td><button type='button' id='btnEliminarPizza'class='btn btn-danger btn-xs glyphicon glyphicon-minus'></button></td></td></tr>");
+        $('#cont_pizza').text(1);
+        $('#valor_pizza').text(costo_pizza);
+        $('#total_pizza').text(costo_pizza);
+        calcular_venta();
+        crear_tabla();
+
+        $("#autoClick").click(function(){
+            array_pizza.push("Pizza");
+            _contador = array_pizza.length;
+            $('#cont_pizza').text(_contador);
+            valor_pizza_x_cantidad = (parseInt(costo_pizza)*parseInt(_contador));
+            $('#total_pizza').text(valor_pizza_x_cantidad );
+            calcular_venta();
+            crear_tabla();
+            });
+
+            $("#btnEliminarPizza").click(function(){
+                array_pizza.pop("Pizza");
+                _contador = array_pizza.length;
+                $('#cont_pizza').text(_contador);
+                valor_pizza_x_cantidad = (parseInt(costo_pizza)*parseInt(_contador));
+                $('#total_pizza').text(valor_pizza_x_cantidad );
+                if(_contador <=0){
+                  $('table#datos tr#contenedor_pizza').remove();
+                }
+                calcular_venta();
+                crear_tabla();
+
+                });
+
+      }
+      else{
+
+        array_pizza.push(_productos);
+        _contador = array_pizza.length;
+        $('#cont_pizza').text(_contador);
+        valor_pizza_x_cantidad = (parseInt(costo_pizza)*parseInt(_contador));
+        $('#total_pizza').text(valor_pizza_x_cantidad );
+        calcular_venta();
+        crear_tabla();
+
+
+      };
+    };
+
+
+
+    if (_productos=="Completo"){
+      if (index_completo <= 0){
+        array_completo.push(_productos);
+
+        $('#datos').append("<tr id='contenedor_completo'><td>"+_productos+"</td><td id='cont_completo'></td><td id='valor_completo'></td><td id='total_completo'></td><td><button type='button' id='autoClick2' class='btn btn-success btn-xs glyphicon glyphicon-plus'></button><td><button type='button' id='btnEliminarCompleto' class='btn btn-danger btn-xs glyphicon glyphicon-minus'></button></td></td></tr>");
+        $('#cont_completo').text(1);
+        $('#valor_completo').text(costo_completo);
+        $('#total_completo').text(costo_completo);
+        calcular_venta();
+        crear_tabla();
+
+        $("#autoClick2").click(function(){
+            array_completo.push("Completo");
+            _contador = array_completo.length;
+            $('#cont_completo').text(_contador);
+            valor_completo_x_cantidad = (parseInt(costo_completo)*parseInt(_contador));
+            $('#total_completo').text(valor_completo_x_cantidad );
+            calcular_venta();
+            crear_tabla();
+            });
+
+            $("#btnEliminarCompleto").click(function(){
+                array_completo.pop("Completo");
+                _contador = array_completo.length;
+                $('#cont_completo').text(_contador);
+                valor_completo_x_cantidad = (parseInt(costo_completo)*parseInt(_contador));
+                $('#total_completo').text(valor_completo_x_cantidad );
+
+                if(_contador <=0){
+                  $('table#datos tr#contenedor_completo').remove();
+                }
+                calcular_venta();
+                crear_tabla();
+                });
+
+      }
+      else{
+        array_completo.push(_productos);
+        _contador = array_completo.length;
+        $('#cont_completo').text(_contador);
+        valor_completo_x_cantidad = (parseInt(costo_completo)*parseInt(_contador));
+        $('#total_completo').text(valor_completo_x_cantidad );
+        calcular_venta();
+        crear_tabla();
+
+
+      };
+    };
+
+    if (_productos=="Churrasco"){
+      if (index_churrasco <= 0){
+        array_churrasco.push(_productos);
+
+        $('#datos').append("<tr id='contenedor_churrasco'><td>"+_productos+"</td><td id='cont_churrasco'></td><td id='valor_churrasco' class='deuda'></td><td id='total_churrasco'></td><td><button type='button' id='autoClick3' class='btn btn-success btn-xs glyphicon glyphicon-plus'></button><td><button type='button' id ='btnEliminarChurrasco' class='btn btn-danger btn-xs glyphicon glyphicon-minus'></button></td></td></tr>");
+        $('#cont_churrasco').text(1);
+        $('#valor_churrasco').text(costo_churrasco);
+        $('#total_churrasco').text(costo_churrasco);
+        calcular_venta();
+        crear_tabla();
+
+        $("#autoClick3").click(function(){
+            array_churrasco.push("Churrasco");
+            _contador = array_churrasco.length;
+            $('#cont_churrasco').text(_contador);
+            valor_churrasco_x_cantidad = (parseInt(costo_churrasco)*parseInt(_contador));
+            $('#total_churrasco').text(valor_churrasco_x_cantidad );
+            calcular_venta();
+            crear_tabla();
+            });
+
+            $("#btnEliminarChurrasco").click(function(){
+                array_churrasco.pop("Churrasco");
+                _contador = array_churrasco.length;
+                $('#cont_churrasco').text(_contador);
+                valor_churrasco_x_cantidad = (parseInt(costo_churrasco)*parseInt(_contador));
+                $('#total_churrasco').text(valor_churrasco_x_cantidad );
+                if(_contador <=0){
+                  $('table#datos tr#contenedor_churrasco').remove();
+                }
+                calcular_venta();
+                crear_tabla();
+                });
+
+      }
+      else{
+        array_churrasco.push(_productos);
+        _contador = array_churrasco.length;
+        $('#cont_churrasco').text(_contador);
+        valor_churrasco_x_cantidad = (parseInt(costo_churrasco)*parseInt(_contador));
+        $('#total_churrasco').text(valor_churrasco_x_cantidad );
+        calcular_venta();
+        crear_tabla();
+
+
+      };
+
+
+    };
+
+
+
+
+
+  });
+
+
+
+</script>
+
+</body>
+</html>
